@@ -16,10 +16,29 @@ def fenetre_score():
     window_score.config(background='#660000')
 
     label_scores = Label(window_score, text="Scores", font=("Arial", 35), bg='#660000', fg='white')
-    label_scores = Label(window_score, text=recuperer_infos_joueurs(), font=("Arial", 15), bg='#660000', fg='white')
+    label2_scores = Label(window_score, text=recuperer_infos_joueurs(), font=("Arial", 15), bg='#660000', fg='white')
     label_scores.pack()
+    label2_scores.pack()
 
     window_score.mainloop()
+
+
+# Affichage de la boutique
+def fenetre_boutique():
+    window_boutique = Tk()
+
+    window_boutique.title("Boutique")
+    window_boutique.geometry("500x500")
+    window_boutique.minsize(480, 360)
+    window_boutique.iconbitmap("score.ico")
+    window_boutique.config(background='#660000')
+
+    label_boutique = Label(window_boutique, text="Boutique", font=("Arial", 35), bg='#660000', fg='white')
+    label2_boutique = Label(window_boutique, text="", font=("Arial", 15), bg='#660000', fg='white')
+    label_boutique.pack()
+    label2_boutique.pack()
+
+    window_boutique.mainloop()
 
 
 # M E N U
@@ -45,7 +64,8 @@ bouton_jouer = Button(frame, text="Jouer", font=("Arial", 25), bg='white', fg='#
                       command=jouer)
 bouton_score = Button(frame, text="Scores", font=("Arial", 25), bg='white', fg='#121517', bd="10", relief="ridge",
                       command=fenetre_score)
-bouton_boutique = Button(frame, text="Boutique", font=("Arial", 25), bg='white', fg='#121517', bd="10", relief="ridge")
+bouton_boutique = Button(frame, text="Boutique", font=("Arial", 25), bg='white', fg='#121517', bd="10", relief="ridge",
+                         comman=fenetre_boutique)
 bouton_jouer.pack(pady=25, fill=X)
 bouton_score.pack(pady=25, fill=X)
 bouton_boutique.pack(pady=25, fill=X)
