@@ -23,4 +23,12 @@ def recuperer_infos_joueurs():
     cursor.execute("SELECT pseudo, xp, argent FROM Profils")
     for i in cursor.fetchall():
         infos_joueurs.append(i)
-    return infos_joueurs
+    liste = [x for elem in infos_joueurs for x in elem]
+    j = 0
+    liste2 = []
+    while j < len(liste) - 2:
+        liste3 = [liste[j], liste[j + 1], liste[j + 2]]
+        liste2.append(liste3)
+        j += 3
+    return liste2
+
