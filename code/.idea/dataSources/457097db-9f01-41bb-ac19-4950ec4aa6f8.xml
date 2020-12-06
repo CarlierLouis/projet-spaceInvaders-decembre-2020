@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dataSource name="@localhost">
-  <database-model serializer="dbm" dbms="MYSQL" family-id="MYSQL" format-version="4.19">
+  <database-model serializer="dbm" dbms="MYSQL" family-id="MYSQL" format-version="4.20">
     <root id="1">
       <ServerVersion>8.0.22</ServerVersion>
       <DefaultEngine>InnoDB</DefaultEngine>
@@ -887,15 +887,15 @@ SYSTEM_USER
       <Host>localhost</Host>
       <ObjectGrants>SHUTDOWN,SUPER
 BACKUP_ADMIN,CLONE_ADMIN,CONNECTION_ADMIN,PERSIST_RO_VARIABLES_ADMIN,SESSION_VARIABLES_ADMIN,SYSTEM_USER,SYSTEM_VARIABLES_ADMIN
-SELECT|performance_schema:null
-SELECT|mysql.user:null
+SELECT|performance_schema
+SELECT|mysql.user
 </ObjectGrants>
     </user>
     <user id="280" parent="1" name="mysql.sys">
       <Host>localhost</Host>
       <ObjectGrants>SYSTEM_USER
-TRIGGER|sys:null
-SELECT|sys.sys_config:null
+TRIGGER|sys
+SELECT|sys.sys_config
 </ObjectGrants>
     </user>
     <user id="281" parent="1" name="root">
@@ -918,7 +918,7 @@ SELECT|sys.sys_config:null
       <Position>3</Position>
       <DataType>int|0s</DataType>
     </column>
-    <column id="286" parent="282" name="money">
+    <column id="286" parent="282" name="argent">
       <Position>4</Position>
       <DataType>int|0s</DataType>
     </column>
