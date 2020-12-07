@@ -4,29 +4,42 @@ from main import jouer
 from database import recuperer_infos_joueurs
 from database import recuperer_pseudos_joueurs
 
-# Choix du profils
-window_profils = Tk()
 
-# Personnalisation de la fenêtre
-window_profils.title("Connexion")
-window_profils.geometry("1080x720")
-window_profils.minsize(480, 360)
-window_profils.iconbitmap("logo.ico")
-window_profils.config(background='#121517')
+# Choix du profil
+def fenetre_profils():
+    # Création de la fenêtre
+    window_profils = Tk()
 
-# Titre
-label_titre_profils = Label(window_profils, text="Choississez votre profil\n", font=("Arial", 40), bg='#121517', fg='white')
-label_titre_profils.pack()
+    # Personnalisation de la fenêtre
+    window_profils.title("Connexion")
+    window_profils.geometry("720x600")
+    window_profils.minsize(480, 360)
+    window_profils.iconbitmap("logo.ico")
+    window_profils.config(background='#121517')
 
-# Menu déroulant
-listeOptions = recuperer_pseudos_joueurs()
-v = StringVar()
-v.set(listeOptions[0])
-menu_deroulant = OptionMenu(window_profils, v, *listeOptions)
-menu_deroulant.pack()
+    # Titre
+    label_titre_profils = Label(window_profils, text="Choississez votre profil\n", font=("Arial", 40), bg='#121517', fg='white')
+    label_titre_profils.pack()
 
-# Affichage
-window_profils.mainloop()
+    # Menu déroulant
+    listeOptions = recuperer_pseudos_joueurs()
+    v = StringVar(window_profils)
+    v.set(listeOptions[0])
+    menu_deroulant = OptionMenu(window_profils, v, *listeOptions)
+    menu_deroulant.pack()
+
+    # Bouton validation
+    validation = Button(window_profils, command=window_profils.destroy, text="Valider", font=("Arial", 15), bg='white', fg='black')
+    validation.pack()
+
+    # Affichage
+    window_profils.mainloop()
+
+    a = v.get()
+    if v.get() == "Louis":
+        print("ok")
+    print(a)
+    return a
 
 
 # M E N U
@@ -86,7 +99,8 @@ def fenetre_score():
     # Ajout des textes et boutons
     label_scores = Label(window_scores, text="Scores", font=("Arial", 35), bg='#660000', fg='white')
     label2_scores = Label(window_scores, text="{Pseudo, xp, argent}\n", font=("Arial", 15), bg='#660000', fg='black')
-    label3_scores = Label(frame_scores, text=recuperer_infos_joueurs(), font=("Arial", 15), bg='#660000', fg='white')
+    infos = recuperer_infos_joueurs()
+    label3_scores = Label(frame_scores, text=infos, font=("Arial", 15), bg='#660000', fg='white')
     bouton_scores_retour = Button(frame_scores_retour, text="retour", font=("Arial", 15), bg='#660000', fg='white',
                                   command=window_scores.destroy)
 
@@ -134,3 +148,7 @@ def fenetre_boutique():
 
     # Affichage
     window_boutique.mainloop()
+
+
+fenetre_profils()
+fenetre_menu()
