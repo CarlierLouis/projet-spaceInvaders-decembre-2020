@@ -14,7 +14,7 @@ def creation_table_Profils():
 
 def remplir_table_Profils():
     sql = "INSERT INTO Profils (pseudo, xp, argent) VALUES (%s, %s, %s)"
-    value = ("Diego", 108, 34)
+    value = ("Michel", 400, 12)
     cursor.execute(sql, value)
     cnx.commit()
 
@@ -32,4 +32,6 @@ def recuperer_infos_joueurs():
         liste3 = [liste[j], liste[j + 1], liste[j + 2]]
         liste2.append(liste3)
         j += 3
-    return liste2
+    # Tri décroissant en fonction de l'xp du joueur
+    print(sorted(liste2, key=lambda a: a[1], reverse=True))
+    return sorted(liste2, key=lambda a: a[1], reverse=True)

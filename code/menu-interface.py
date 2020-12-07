@@ -10,33 +10,54 @@ def fenetre_score():
     window_score = Tk()
 
     window_score.title("Scores")
-    window_score.geometry("500x500")
+    window_score.geometry("1200x400")
     window_score.minsize(480, 360)
     window_score.iconbitmap("score.ico")
     window_score.config(background='#660000')
 
+    frame_scores = Frame(window_score, bg='#660000')
+    frame_scores_retour = Frame(window_score, bg='#660000')
+
     label_scores = Label(window_score, text="Scores", font=("Arial", 35), bg='#660000', fg='white')
-    label2_scores = Label(window_score, text=recuperer_infos_joueurs(), font=("Arial", 15), bg='#660000', fg='white')
+    label2_scores = Label(window_score, text="{Pseudo, xp, argent}\n", font=("Arial", 15), bg='#660000', fg='black')
+    label3_scores = Label(frame_scores, text=recuperer_infos_joueurs(), font=("Arial", 15), bg='#660000', fg='white')
+    label_scores_retour = Button(frame_scores_retour, text="retour", font=("Arial", 15), bg='#660000', fg='white',
+                                 command=window_score.destroy)
+
     label_scores.pack()
     label2_scores.pack()
+    label3_scores.pack()
+    label_scores_retour.pack()
+
+    frame_scores.pack()
+    frame_scores_retour.pack(pady=25, fill=X, side=BOTTOM)
 
     window_score.mainloop()
 
 
-# Affichage de la boutique
+# Affichage de la boutique (fenêtre de la boutique)
 def fenetre_boutique():
     window_boutique = Tk()
 
     window_boutique.title("Boutique")
     window_boutique.geometry("500x500")
     window_boutique.minsize(480, 360)
-    window_boutique.iconbitmap("score.ico")
+    window_boutique.iconbitmap("boutique.ico")
     window_boutique.config(background='#660000')
 
+    frame_boutique = Frame(window_boutique, bg='#660000')
+    frame_boutique_retour = Frame(window_boutique, bg='#660000')
+
     label_boutique = Label(window_boutique, text="Boutique", font=("Arial", 35), bg='#660000', fg='white')
-    label2_boutique = Label(window_boutique, text="", font=("Arial", 15), bg='#660000', fg='white')
+    label2_boutique = Label(frame_boutique, text="", font=("Arial", 15), bg='#660000', fg='white')
+    label_boutique_retour = Button(frame_boutique_retour, text="retour", font=("Arial", 15), bg='#660000', fg='white',
+                                   command=window_boutique.destroy)
     label_boutique.pack()
     label2_boutique.pack()
+    label_boutique_retour.pack()
+
+    frame_boutique.pack()
+    frame_boutique_retour.pack(pady=25, fill=X, side=BOTTOM)
 
     window_boutique.mainloop()
 
