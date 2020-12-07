@@ -1,6 +1,7 @@
 import mysql
 from mysql import connector
 
+
 cnx = mysql.connector.connect(user='root', password='root', host='127.0.0.1', database='infos')
 cursor = cnx.cursor()
 
@@ -33,5 +34,7 @@ def recuperer_infos_joueurs():
         liste2.append(liste3)
         j += 3
     # Tri décroissant en fonction de l'xp du joueur
-    print(sorted(liste2, key=lambda a: a[1], reverse=True))
-    return sorted(liste2, key=lambda a: a[1], reverse=True)
+    liste_finale = sorted(liste2, key=lambda a: a[1], reverse=True)
+    print(liste_finale)
+    return liste_finale
+
