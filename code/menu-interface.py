@@ -2,10 +2,30 @@ from tkinter import *
 
 from main import jouer
 from database import recuperer_infos_joueurs
+from database import recuperer_pseudos_joueurs
 
 # Choix du profils
 window_profils = Tk()
 
+# Personnalisation de la fenêtre
+window_profils.title("Connexion")
+window_profils.geometry("1080x720")
+window_profils.minsize(480, 360)
+window_profils.iconbitmap("logo.ico")
+window_profils.config(background='#121517')
+
+# Titre
+label_titre_profils = Label(window_profils, text="Choississez votre profil\n", font=("Arial", 40), bg='#121517', fg='white')
+label_titre_profils.pack()
+
+# Menu déroulant
+listeOptions = recuperer_pseudos_joueurs()
+v = StringVar()
+v.set(listeOptions[0])
+menu_deroulant = OptionMenu(window_profils, v, *listeOptions)
+menu_deroulant.pack()
+
+# Affichage
 window_profils.mainloop()
 
 
