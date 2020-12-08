@@ -17,6 +17,9 @@ def fenetre_profils():
     window_profils.iconbitmap("logo.ico")
     window_profils.config(background='#121517')
 
+    # Création de la frame
+    frame_profls = Frame(window_profils, bg="#121517")
+
     # Titre
     label_titre_profils = Label(window_profils, text="Choississez votre profil\n", font=("Arial", 40), bg='#121517', fg='white')
     label_titre_profils.pack()
@@ -29,12 +32,16 @@ def fenetre_profils():
     menu_deroulant.pack()
 
     # Bouton validation
-    validation = Button(window_profils, command=window_profils.destroy, text="Valider", font=("Arial", 15), bg='white', fg='black')
+    validation = Button(frame_profls, command=window_profils.destroy, text="Valider", font=("Arial", 15), bg='white', fg='black')
     validation.pack()
+
+    # Ajout de la frame
+    frame_profls.pack(expand=YES)
 
     # Affichage
     window_profils.mainloop()
 
+    # Mise en mémoire du profils sélecionné
     a = v.get()
     if v.get() == "Louis":
         print("ok")
@@ -55,18 +62,18 @@ def fenetre_menu():
     window_menu.config(background='#121517')
 
     # Création de la frame
-    frame = Frame(window_menu, bg='#121517')
+    frame_menu = Frame(window_menu, bg='#121517')
 
     # Titre
     label_titre = Label(window_menu, text="Space Invaders", font=("Arial", 40), bg='#121517', fg='white')
     label_titre.pack()
 
     # Ajout des boutons
-    bouton_jouer = Button(frame, text="Jouer", font=("Arial", 25), bg='white', fg='#121517', bd="10", relief="ridge",
+    bouton_jouer = Button(frame_menu, text="Jouer", font=("Arial", 25), bg='white', fg='#121517', bd="10", relief="ridge",
                           command=jouer)
-    bouton_score = Button(frame, text="Scores", font=("Arial", 25), bg='white', fg='#121517', bd="10", relief="ridge",
+    bouton_score = Button(frame_menu, text="Scores", font=("Arial", 25), bg='white', fg='#121517', bd="10", relief="ridge",
                           command=fenetre_score)
-    bouton_boutique = Button(frame, text="Boutique", font=("Arial", 25), bg='white', fg='#121517', bd="10", relief="ridge",
+    bouton_boutique = Button(frame_menu, text="Boutique", font=("Arial", 25), bg='white', fg='#121517', bd="10", relief="ridge",
                              comman=fenetre_boutique)
 
     bouton_jouer.pack(pady=25, fill=X)
@@ -74,7 +81,7 @@ def fenetre_menu():
     bouton_boutique.pack(pady=25, fill=X)
 
     # Ajout de la frame
-    frame.pack(expand=YES)
+    frame_menu.pack(expand=YES)
 
     # Affichage
     window_menu.mainloop()
