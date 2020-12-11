@@ -3,6 +3,7 @@ from tkinter import *
 from main import jouer
 from database import recuperer_infos_joueurs
 from database import recuperer_pseudos_joueurs
+import jeu
 
 
 # Choix du profil
@@ -68,7 +69,7 @@ def fenetre_menu():
 
     # Ajout des boutons
     bouton_jouer = Button(frame_menu, text="Jouer", font=("Arial", 25), bg='white', fg='#121517', bd="10", relief="ridge",
-                          command=jouer)
+                          command=jeu)
     bouton_score = Button(frame_menu, text="Scores", font=("Arial", 25), bg='white', fg='#121517', bd="10", relief="ridge",
                           command=fenetre_score)
     bouton_boutique = Button(frame_menu, text="Boutique", font=("Arial", 25), bg='white', fg='#121517', bd="10", relief="ridge",
