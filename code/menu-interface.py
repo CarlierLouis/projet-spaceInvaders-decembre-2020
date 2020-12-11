@@ -43,8 +43,6 @@ def fenetre_profils():
 
     # Mise en mémoire du profils sélecionné
     a = v.get()
-    if v.get() == "Louis":
-        print("ok")
     print(a)
     return a
 

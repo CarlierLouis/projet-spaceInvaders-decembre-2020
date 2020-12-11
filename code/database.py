@@ -57,4 +57,3 @@ def recuperer_pseudos_joueurs():
     print(pseudos)
     return pseudos
 
-
