@@ -1,9 +1,13 @@
 from tkinter import *
 
-from main import jouer
 from database import recuperer_infos_joueurs
 from database import recuperer_pseudos_joueurs
-import jeu
+from main import jouer_console
+
+
+# Fonstion qui appelle le script du jeu
+def jouer():
+    import jeu
 
 
 # Choix du profil
@@ -67,9 +71,10 @@ def fenetre_menu():
     label_titre = Label(window_menu, text="Space Invaders", font=("Arial", 40), bg='#121517', fg='white')
     label_titre.pack()
 
+
     # Ajout des boutons
     bouton_jouer = Button(frame_menu, text="Jouer", font=("Arial", 25), bg='white', fg='#121517', bd="10", relief="ridge",
-                          command=jeu)
+                          command=jouer)
     bouton_score = Button(frame_menu, text="Scores", font=("Arial", 25), bg='white', fg='#121517', bd="10", relief="ridge",
                           command=fenetre_score)
     bouton_boutique = Button(frame_menu, text="Boutique", font=("Arial", 25), bg='white', fg='#121517', bd="10", relief="ridge",
@@ -105,8 +110,7 @@ def fenetre_score():
     # Ajout des textes et boutons
     label_scores = Label(window_scores, text="Scores", font=("Arial", 35), bg='#660000', fg='white')
     label2_scores = Label(window_scores, text="{Pseudo, xp, argent}\n", font=("Arial", 15), bg='#660000', fg='black')
-    infos = recuperer_infos_joueurs()
-    label3_scores = Label(frame_scores, text=infos, font=("Arial", 15), bg='#660000', fg='white')
+    label3_scores = Label(frame_scores, text=recuperer_infos_joueurs(), font=("Arial", 15), bg='#660000', fg='white')
     bouton_scores_retour = Button(frame_scores_retour, text="retour", font=("Arial", 15), bg='#660000', fg='white',
                                   command=window_scores.destroy)
 

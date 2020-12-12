@@ -4,8 +4,6 @@ from mysql import connector
 cnx = mysql.connector.connect(user='root', password='root', host='127.0.0.1', database='infos')
 cursor = cnx.cursor()
 
-infos_joueurs = []
-
 
 def creation_table_Profils():
     cursor.execute("CREATE TABLE Profils (id int primary key not null auto_increment,"
@@ -20,6 +18,7 @@ def remplir_table_Profils():
 
 
 def recuperer_infos_joueurs():
+    infos_joueurs = []
     cursor.execute("SELECT pseudo, xp, argent FROM Profils")
     for i in cursor.fetchall():
         infos_joueurs.append(i)
@@ -39,6 +38,7 @@ def recuperer_infos_joueurs():
 
 
 def recuperer_pseudos_joueurs():
+    infos_joueurs = []
     cursor.execute("SELECT pseudo, xp, argent FROM Profils")
     for i in cursor.fetchall():
         infos_joueurs.append(i)
