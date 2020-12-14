@@ -1,4 +1,5 @@
 from tkinter import *
+from tkinter import messagebox
 
 from database import recuperer_infos_joueurs
 from database import recuperer_pseudos_joueurs
@@ -55,17 +56,28 @@ def fenetre_profils():
     label_nouveau.pack()
 
     # Entry du nouveau pseudo
-    def recup_pseudo():
+    def recup_nouveau_pseudo():
         recup_nouveau = entry_pseudo.get()
-        # Fonction (de database.py) qui ajoute le pseudo dans la db
-        remplir_table_Profils(recup_nouveau, 0, 0)
+        if recup_nouveau in recuperer_pseudos_joueurs() or recup_nouveau == "":
+            messagebox.showinfo("erreur", "le pseudo que vous avez choisi est déjà pris ou ne correspond pas aux normes")
+        else:
+            # Fonction (de database.py) qui ajoute le pseudo dans la db
+            remplir_table_Profils(recup_nouveau, 0, 0)
 
     entry_pseudo = Entry(frame_profls, font=("Arial", 13), fg="red")
     entry_pseudo.pack()
 
     # Bouton qui déclanche l'appel de la fonction pour remplir la db avec le  nouveau pseudo
-    bouton_recup = Button(frame_profls, text="Enregistrer le nouveau pseudo", font=("Arial", 10), command=recup_pseudo)
+    bouton_recup = Button(frame_profls, text="Enregistrer le nouveau pseudo", font=("Arial", 10),
+                          command=recup_nouveau_pseudo)
     bouton_recup.pack()
+
+    # Commenataire ajout nouveau profil
+    commentaire_profil = Label(frame_profls,
+                               text="\n\n\n Une fois votre nouveau pseudo enregistré,"
+                                    " veillez relancer le jeu afin de pouvoir selectionné votre nouveau profil",
+                               font=("Arial", 10), bg="#121517", fg='red')
+    commentaire_profil.pack()
 
     # Ajout de la frame
     frame_profls.pack()
