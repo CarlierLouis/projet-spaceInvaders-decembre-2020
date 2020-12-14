@@ -2,6 +2,7 @@ from tkinter import *
 
 from database import recuperer_infos_joueurs
 from database import recuperer_pseudos_joueurs
+from database import remplir_table_Profils
 from main import jouer_console
 
 
@@ -26,7 +27,8 @@ def fenetre_profils():
     frame_profls = Frame(window_profils, bg="#121517")
 
     # Titre
-    label_titre_profils = Label(window_profils, text="Choississez votre profil\n", font=("Arial", 40), bg='#121517', fg='white')
+    label_titre_profils = Label(window_profils, text="Choississez votre profil\n", font=("Arial", 40), bg='#121517',
+                                fg='white')
     label_titre_profils.pack()
 
     # Menu déroulant
@@ -36,20 +38,45 @@ def fenetre_profils():
     menu_deroulant = OptionMenu(window_profils, v, *listeOptions)
     menu_deroulant.pack()
 
+    # Saut de ligne
+    label_saut = Label(frame_profls, text="\n",
+                       font=("Arial", 15), bg='#121517', fg='white')
+    label_saut.pack()
+
     # Bouton validation
-    validation = Button(frame_profls, command=window_profils.destroy, text="Valider", font=("Arial", 15), bg='white', fg='black')
+    validation = Button(frame_profls, text="Valider", font=("Arial", 15), bg='white', fg='black',
+                        command=window_profils.destroy)
     validation.pack()
 
+    # Titre ajout nouveau joueur
+    label_nouveau = Label(frame_profls, text="\n\n______________________\n\n\n\n"
+                                             " Vous êtes un nouveau joueur, ajouter votre pseudo ici : \n",
+                          font=("Arial", 15), bg='#121517', fg='white')
+    label_nouveau.pack()
+
+    # Entry du nouveau pseudo
+    def recup_pseudo():
+        recup_nouveau = entry_pseudo.get()
+        # Fonction (de database.py) qui ajoute le pseudo dans la db
+        remplir_table_Profils(recup_nouveau, 0, 0)
+
+    entry_pseudo = Entry(frame_profls, font=("Arial", 13), fg="red")
+    entry_pseudo.pack()
+
+    # Bouton qui déclanche l'appel de la fonction pour remplir la db avec le  nouveau pseudo
+    bouton_recup = Button(frame_profls, text="Enregistrer le nouveau pseudo", font=("Arial", 10), command=recup_pseudo)
+    bouton_recup.pack()
+
     # Ajout de la frame
-    frame_profls.pack(expand=YES)
+    frame_profls.pack()
 
     # Affichage
     window_profils.mainloop()
 
     # Mise en mémoire du profils sélecionné
-    a = v.get()
-    print(a)
-    return a
+    recup_profil = v.get()
+    print(recup_profil)
+    return recup_profil
 
 
 # M E N U
@@ -71,14 +98,13 @@ def fenetre_menu():
     label_titre = Label(window_menu, text="Space Invaders", font=("Arial", 40), bg='#121517', fg='white')
     label_titre.pack()
 
-
     # Ajout des boutons
-    bouton_jouer = Button(frame_menu, text="Jouer", font=("Arial", 25), bg='white', fg='#121517', bd="10", relief="ridge",
-                          command=jouer)
-    bouton_score = Button(frame_menu, text="Scores", font=("Arial", 25), bg='white', fg='#121517', bd="10", relief="ridge",
-                          command=fenetre_score)
-    bouton_boutique = Button(frame_menu, text="Boutique", font=("Arial", 25), bg='white', fg='#121517', bd="10", relief="ridge",
-                             comman=fenetre_boutique)
+    bouton_jouer = Button(frame_menu, text="Jouer", font=("Arial", 25), bg='white', fg='#121517', bd="10",
+                          relief="ridge",command=jouer)
+    bouton_score = Button(frame_menu, text="Scores", font=("Arial", 25), bg='white', fg='#121517', bd="10",
+                          relief="ridge",command=fenetre_score)
+    bouton_boutique = Button(frame_menu, text="Boutique", font=("Arial", 25), bg='white', fg='#121517', bd="10",
+                             relief="ridge",comman=fenetre_boutique)
 
     bouton_jouer.pack(pady=25, fill=X)
     bouton_score.pack(pady=25, fill=X)

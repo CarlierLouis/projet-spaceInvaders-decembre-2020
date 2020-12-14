@@ -10,9 +10,9 @@ def creation_table_Profils():
                    "pseudo varchar(255), xp int(255), argent int(255))")
 
 
-def remplir_table_Profils():
+def remplir_table_Profils(pseudo, xp, argent):
     sql = "INSERT INTO Profils (pseudo, xp, argent) VALUES (%s, %s, %s)"
-    value = ("Michel", 400, 12)
+    value = (pseudo, xp, argent)
     cursor.execute(sql, value)
     cnx.commit()
 
@@ -56,4 +56,3 @@ def recuperer_pseudos_joueurs():
         pseudos.append(i[0])
     print(pseudos)
     return pseudos
-
