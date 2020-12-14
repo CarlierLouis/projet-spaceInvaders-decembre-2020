@@ -40,8 +40,7 @@ def fenetre_profils():
     menu_deroulant.pack()
 
     # Saut de ligne
-    label_saut = Label(frame_profls, text="\n",
-                       font=("Arial", 15), bg='#121517', fg='white')
+    label_saut = Label(frame_profls, text="\n", font=("Arial", 15), bg='#121517', fg='white')
     label_saut.pack()
 
     # Bouton validation
@@ -51,15 +50,23 @@ def fenetre_profils():
 
     # Titre ajout nouveau joueur
     label_nouveau = Label(frame_profls, text="\n\n______________________\n\n\n\n"
-                                             " Vous êtes un nouveau joueur, ajouter votre pseudo ici : \n",
+                                             " Vous êtes un nouveau joueur, ajoutez votre pseudo ici : \n",
                           font=("Arial", 15), bg='#121517', fg='white')
     label_nouveau.pack()
 
     # Entry du nouveau pseudo
     def recup_nouveau_pseudo():
         recup_nouveau = entry_pseudo.get()
+        # Condition pour que le nouveau pseudo soit accepté
         if recup_nouveau in recuperer_pseudos_joueurs() or recup_nouveau == "":
-            messagebox.showinfo("erreur", "le pseudo que vous avez choisi est déjà pris ou ne correspond pas aux normes")
+            messagebox.showinfo("erreur", "Le pseudo que vous avez choisi est déjà pris "
+                                          "ou ne correspond pas aux normes.")
+        elif " " in recup_nouveau:
+            messagebox.showinfo("erreur", "Le pseudo que vous avez choisi est déjà pris "
+                                          "ou ne correspond pas aux normes.")
+        elif len(recup_nouveau) < 3 or len(recup_nouveau) > 10:
+            messagebox.showinfo("erreur", "Le pseudo que vous avez choisi est déjà pris "
+                                          "ou ne correspond pas aux normes.")
         else:
             # Fonction (de database.py) qui ajoute le pseudo dans la db
             remplir_table_Profils(recup_nouveau, 0, 0)
@@ -75,7 +82,7 @@ def fenetre_profils():
     # Commenataire ajout nouveau profil
     commentaire_profil = Label(frame_profls,
                                text="\n\n\n Une fois votre nouveau pseudo enregistré,"
-                                    " veillez relancer le jeu afin de pouvoir selectionné votre nouveau profil",
+                                    " veillez relancer le jeu afin de pouvoir selectionner votre nouveau profil",
                                font=("Arial", 10), bg="#121517", fg='red')
     commentaire_profil.pack()
 
@@ -136,7 +143,7 @@ def fenetre_score():
 
     # Personnalisation de la fenêtre
     window_scores.title("Scores")
-    window_scores.geometry("1200x400")
+    window_scores.geometry("800x500")
     window_scores.minsize(480, 360)
     window_scores.iconbitmap("score.ico")
     window_scores.config(background='#660000')
@@ -172,7 +179,7 @@ def fenetre_boutique():
 
     # Personnalisation de la fenêtre
     window_boutique.title("Boutique")
-    window_boutique.geometry("500x500")
+    window_boutique.geometry("800x500")
     window_boutique.minsize(480, 360)
     window_boutique.iconbitmap("boutique.ico")
     window_boutique.config(background='#660000')
