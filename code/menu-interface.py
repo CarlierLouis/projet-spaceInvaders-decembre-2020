@@ -119,11 +119,11 @@ def fenetre_menu():
 
     # Ajout des boutons
     bouton_jouer = Button(frame_menu, text="Jouer", font=("Arial", 25), bg='white', fg='#121517', bd="10",
-                          relief="ridge",command=jouer)
+                          relief="ridge", command=jouer)
     bouton_score = Button(frame_menu, text="Scores", font=("Arial", 25), bg='white', fg='#121517', bd="10",
-                          relief="ridge",command=fenetre_score)
+                          relief="ridge", command=fenetre_score)
     bouton_boutique = Button(frame_menu, text="Boutique", font=("Arial", 25), bg='white', fg='#121517', bd="10",
-                             relief="ridge",comman=fenetre_boutique)
+                             relief="ridge", command=fenetre_boutique)
 
     bouton_jouer.pack(pady=25, fill=X)
     bouton_score.pack(pady=25, fill=X)
