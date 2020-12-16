@@ -2,6 +2,8 @@ import pygame
 import random
 import os
 
+from database import ajout_xp
+
 
 class Joueur:
 
@@ -165,7 +167,7 @@ class Laser:
 
     def hors_ecran(self, height):
         """
-        teste si le laser est hors de l'écran ou aps
+        teste si le laser est hors de l'écran ou pas
         Pré: height : int
         Post: boolean
         """
@@ -205,7 +207,7 @@ def collision(obj1, obj2):
     return obj1.mask.overlap(obj2.mask, (offset_x, offset_y)) != None
 
 
-def main():
+def main(pseudo_choisi):
     fps = 60
     vel = 6
     jeu = True
@@ -235,6 +237,10 @@ def main():
         if perdu:
             lost_label = lost_font.render("Game Over", 1, (255, 255, 255))
             fenetre.blit(lost_label, (width / 2 - lost_label.get_width() / 2, height / 2 - lost_label.get_height() / 2))
+            pygame.quit()
+            print(vague)
+            ajout_xp(score, vague, pseudo_choisi)
+
         pygame.display.update()
 
     while jeu:
@@ -288,4 +294,4 @@ def main():
         joueur.deplacement_laser(-vel_laser, ennemis)
 
 
-main()
+

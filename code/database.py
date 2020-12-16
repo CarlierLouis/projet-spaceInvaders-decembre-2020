@@ -1,6 +1,7 @@
 import mysql
 from mysql import connector
 
+
 cnx = mysql.connector.connect(user='root', password='root', host='127.0.0.1', database='infos')
 cursor = cnx.cursor()
 
@@ -56,3 +57,12 @@ def recuperer_pseudos_joueurs():
         pseudos.append(i[0])
     print(pseudos)
     return pseudos
+
+
+def ajout_xp(xp, argent, pseudo):
+    sql = "UPDATE Profils SET xp = xp + %s, argent = argent + %s WHERE pseudo = %s"
+    value = (xp, argent, pseudo)
+    cursor.execute(sql, value)
+    cnx.commit()
+
+

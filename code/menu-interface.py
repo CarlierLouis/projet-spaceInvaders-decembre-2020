@@ -4,98 +4,99 @@ from tkinter import messagebox
 from database import recuperer_infos_joueurs
 from database import recuperer_pseudos_joueurs
 from database import remplir_table_Profils
-from main import jouer_console
 
 
 # Fonstion qui appelle le script du jeu
 def jouer():
-    import jeu
+    from main import main
+    main(recup_profil)
 
 
 # Choix du profil
-def fenetre_profils():
-    # Création de la fenêtre
-    window_profils = Tk()
 
-    # Personnalisation de la fenêtre
-    window_profils.title("Connexion")
-    window_profils.geometry("720x600")
-    window_profils.minsize(480, 360)
-    window_profils.iconbitmap("logo.ico")
-    window_profils.config(background='#121517')
+# Création de la fenêtre
+window_profils = Tk()
 
-    # Création de la frame
-    frame_profls = Frame(window_profils, bg="#121517")
+# Personnalisation de la fenêtre
+window_profils.title("Connexion")
+window_profils.geometry("720x600")
+window_profils.minsize(480, 360)
+window_profils.iconbitmap("images/logo.ico")
+window_profils.config(background='#121517')
 
-    # Titre
-    label_titre_profils = Label(window_profils, text="Choississez votre profil\n", font=("Arial", 40), bg='#121517',
-                                fg='white')
-    label_titre_profils.pack()
+# Création de la frame
+frame_profls = Frame(window_profils, bg="#121517")
 
-    # Menu déroulant
-    listeOptions = recuperer_pseudos_joueurs()
-    v = StringVar(window_profils)
-    v.set(listeOptions[0])
-    menu_deroulant = OptionMenu(window_profils, v, *listeOptions)
-    menu_deroulant.pack()
+# Titre
+label_titre_profils = Label(window_profils, text="Choississez votre profil\n", font=("Arial", 40), bg='#121517',
+                            fg='white')
+label_titre_profils.pack()
 
-    # Saut de ligne
-    label_saut = Label(frame_profls, text="\n", font=("Arial", 15), bg='#121517', fg='white')
-    label_saut.pack()
+# Menu déroulant
+listeOptions = recuperer_pseudos_joueurs()
+v = StringVar(window_profils)
+v.set(listeOptions[0])
+menu_deroulant = OptionMenu(window_profils, v, *listeOptions)
+menu_deroulant.pack()
 
-    # Bouton validation
-    validation = Button(frame_profls, text="Valider", font=("Arial", 15), bg='white', fg='black',
-                        command=window_profils.destroy)
-    validation.pack()
+# Saut de ligne
+label_saut = Label(frame_profls, text="\n", font=("Arial", 15), bg='#121517', fg='white')
+label_saut.pack()
 
-    # Titre ajout nouveau joueur
-    label_nouveau = Label(frame_profls, text="\n\n______________________\n\n\n\n"
-                                             " Vous êtes un nouveau joueur, ajoutez votre pseudo ici : \n",
-                          font=("Arial", 15), bg='#121517', fg='white')
-    label_nouveau.pack()
+# Bouton validation
+validation = Button(frame_profls, text="Valider", font=("Arial", 15), bg='white', fg='black',
+                    command=window_profils.destroy)
+validation.pack()
 
-    # Entry du nouveau pseudo
-    def recup_nouveau_pseudo():
-        recup_nouveau = entry_pseudo.get()
-        # Condition pour que le nouveau pseudo soit accepté
-        if recup_nouveau in recuperer_pseudos_joueurs() or recup_nouveau == "":
-            messagebox.showinfo("erreur", "Le pseudo que vous avez choisi est déjà pris "
-                                          "ou ne correspond pas aux normes.")
-        elif " " in recup_nouveau:
-            messagebox.showinfo("erreur", "Le pseudo que vous avez choisi est déjà pris "
-                                          "ou ne correspond pas aux normes.")
-        elif len(recup_nouveau) < 3 or len(recup_nouveau) > 10:
-            messagebox.showinfo("erreur", "Le pseudo que vous avez choisi est déjà pris "
-                                          "ou ne correspond pas aux normes.")
-        else:
-            # Fonction (de database.py) qui ajoute le pseudo dans la db
-            remplir_table_Profils(recup_nouveau, 0, 0)
+# Titre ajout nouveau joueur
+label_nouveau = Label(frame_profls, text="\n\n______________________\n\n\n\n"
+                                         " Vous êtes un nouveau joueur, ajoutez votre pseudo ici : \n",
+                      font=("Arial", 15), bg='#121517', fg='white')
+label_nouveau.pack()
 
-    entry_pseudo = Entry(frame_profls, font=("Arial", 13), fg="red")
-    entry_pseudo.pack()
 
-    # Bouton qui déclanche l'appel de la fonction pour remplir la db avec le  nouveau pseudo
-    bouton_recup = Button(frame_profls, text="Enregistrer le nouveau pseudo", font=("Arial", 10),
-                          command=recup_nouveau_pseudo)
-    bouton_recup.pack()
+# Entry du nouveau pseudo
+def recup_nouveau_pseudo():
+    recup_nouveau = entry_pseudo.get()
+    # Condition pour que le nouveau pseudo soit accepté
+    if recup_nouveau in recuperer_pseudos_joueurs() or recup_nouveau == "":
+        messagebox.showinfo("erreur", "Le pseudo que vous avez choisi est déjà pris "
+                                      "ou ne correspond pas aux normes.")
+    elif " " in recup_nouveau:
+        messagebox.showinfo("erreur", "Le pseudo que vous avez choisi est déjà pris "
+                                      "ou ne correspond pas aux normes.")
+    elif len(recup_nouveau) < 3 or len(recup_nouveau) > 10:
+        messagebox.showinfo("erreur", "Le pseudo que vous avez choisi est déjà pris "
+                                      "ou ne correspond pas aux normes.")
+    else:
+        # Fonction (de database.py) qui ajoute le pseudo dans la db
+        remplir_table_Profils(recup_nouveau, 0, 0)
 
-    # Commenataire ajout nouveau profil
-    commentaire_profil = Label(frame_profls,
-                               text="\n\n\n Une fois votre nouveau pseudo enregistré,"
-                                    " veillez relancer le jeu afin de pouvoir selectionner votre nouveau profil",
-                               font=("Arial", 10), bg="#121517", fg='red')
-    commentaire_profil.pack()
 
-    # Ajout de la frame
-    frame_profls.pack()
+entry_pseudo = Entry(frame_profls, font=("Arial", 13), fg="red")
+entry_pseudo.pack()
 
-    # Affichage
-    window_profils.mainloop()
+# Bouton qui déclanche l'appel de la fonction pour remplir la db avec le  nouveau pseudo
+bouton_recup = Button(frame_profls, text="Enregistrer le nouveau pseudo", font=("Arial", 10),
+                      command=recup_nouveau_pseudo)
+bouton_recup.pack()
 
-    # Mise en mémoire du profils sélecionné
-    recup_profil = v.get()
-    print(recup_profil)
-    return recup_profil
+# Commenataire ajout nouveau profil
+commentaire_profil = Label(frame_profls,
+                           text="\n\n\n Une fois votre nouveau pseudo enregistré,"
+                                " veillez relancer le jeu afin de pouvoir selectionner votre nouveau profil",
+                           font=("Arial", 10), bg="#121517", fg='red')
+commentaire_profil.pack()
+
+# Ajout de la frame
+frame_profls.pack()
+
+# Affichage
+window_profils.mainloop()
+
+# Mise en mémoire du profils sélecionné
+recup_profil = v.get()
+print(recup_profil)
 
 
 # M E N U
@@ -107,7 +108,7 @@ def fenetre_menu():
     window_menu.title("Space Invaders")
     window_menu.geometry("1080x720")
     window_menu.minsize(480, 360)
-    window_menu.iconbitmap("logo.ico")
+    window_menu.iconbitmap("images/logo.ico")
     window_menu.config(background='#121517')
 
     # Création de la frame
@@ -145,7 +146,7 @@ def fenetre_score():
     window_scores.title("Scores")
     window_scores.geometry("800x500")
     window_scores.minsize(480, 360)
-    window_scores.iconbitmap("score.ico")
+    window_scores.iconbitmap("images/score.ico")
     window_scores.config(background='#660000')
 
     # Création des frames
@@ -181,7 +182,7 @@ def fenetre_boutique():
     window_boutique.title("Boutique")
     window_boutique.geometry("800x500")
     window_boutique.minsize(480, 360)
-    window_boutique.iconbitmap("boutique.ico")
+    window_boutique.iconbitmap("images/boutique.ico")
     window_boutique.config(background='#660000')
 
     # Création des frames
@@ -205,5 +206,4 @@ def fenetre_boutique():
     window_boutique.mainloop()
 
 
-fenetre_profils()
 fenetre_menu()
