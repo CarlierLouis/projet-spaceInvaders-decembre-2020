@@ -186,16 +186,9 @@ class Laser:
         return collision(self, obj)
 
 
-pygame.init()
-pygame.font.init()
+
 width, height = 1000, 780
 
-bg = pygame.transform.scale(pygame.image.load(os.path.join("images", "space.png")), (width, height))
-
-score = -100
-
-fenetre = pygame.display.set_mode((width, height))
-pygame.display.set_caption("Space invaders")
 
 joueur = pygame.image.load(os.path.join("images", "ship.gif"))
 ennemi = pygame.image.load(os.path.join("images", "alien.gif"))
@@ -221,12 +214,18 @@ def main(pseudo_choisi):
     Post: pseudo du joueur
     Pré: -
     """
+    pygame.init()
+    pygame.font.init()
+    bg = pygame.transform.scale(pygame.image.load(os.path.join("images", "space.png")), (width, height))
+    fenetre = pygame.display.set_mode((width, height))
+    pygame.display.set_caption("Space invaders")
+    global score
+    score = 0
     fps = 60
     vel = 6
     jeu = True
     clock = pygame.time.Clock()
     vague = 0
-    global score
     font = pygame.font.SysFont("comicsans", 50)
     lost_font = pygame.font.SysFont("comicsans", 100)
     joueur = Joueur()
@@ -256,7 +255,6 @@ def main(pseudo_choisi):
             lost_label = lost_font.render("Game Over", 1, (255, 255, 255))
             fenetre.blit(lost_label, (width / 2 - lost_label.get_width() / 2, height / 2 - lost_label.get_height() / 2))
             pygame.quit()
-            print(vague)
             ajout_xp(score, vague, pseudo_choisi)
 
         pygame.display.update()
@@ -273,7 +271,6 @@ def main(pseudo_choisi):
         if len(ennemis) == 0:
             longueur_vague += 3
             vague += 1
-            score += 100
             for i in range(longueur_vague):
                 ennemi = Ennemi(random.randrange(70, width - 70), random.randrange(-1000 + vague * -100, -200))
                 ennemis.append(ennemi)
@@ -289,10 +286,6 @@ def main(pseudo_choisi):
 
         if keys[pygame.K_LEFT] and joueur.x - vel > 0:
             joueur.x -= vel
-
-        if keys[pygame.K_ESCAPE]:
-            score = -100
-            jeu = False
 
         if keys[pygame.K_SPACE]:
             joueur.tir()
