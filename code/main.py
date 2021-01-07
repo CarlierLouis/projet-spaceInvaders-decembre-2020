@@ -88,9 +88,11 @@ class Ennemi:
     def __init__(self, x, y):
         """
         Classe Ennemi sert à l'affichage, déplacement ennemi et ses lasers
-        Pré: x,y :int
+        Pré: x,y :int y doiy être supérieur à height
         Post: -
         """
+        if y > height:
+            raise ValueError
         self.x = x
         self.y = y
         self.laser_img = laser_ennemi
@@ -101,14 +103,15 @@ class Ennemi:
     def deplacement(self, vel):
         """
         effectue le déplacement des Ennemis
-        :param vel:int
+        Pré: vel:int
+        Post: -
         """
         self.y += vel
 
     def dessin(self, fenetre):
         """
         affiche l'ennemi
-        :param fenetre: display
+        Pré: fenetre: display
         """
         fenetre.blit(self.img, (self.x, self.y))
         for laser in self.lasers:
@@ -117,8 +120,7 @@ class Ennemi:
     def deplacement_laser(self, vel, obj):
         """
         deplace les lasers tirer par l'ennemi
-        :param vel:int
-        :param obj:objects
+        Pré: vel:int, obj:objects
         """
         for laser in self.lasers:
             laser.deplacement(vel)
@@ -131,6 +133,8 @@ class Ennemi:
     def tir(self):
         """
         Créer le tir
+        Pré: -
+        Post: -
         """
         laser = Laser(self.x + 20, self.y + 30, self.laser_img)
         self.lasers.append(laser)
@@ -176,8 +180,8 @@ class Laser:
     def collision(self, obj):
         """
         teste si il y a une collision
-        :param obj: object
-        :return: boolean
+        Pré: obj: object
+        Post: boolean
         """
         return collision(self, obj)
 
@@ -202,12 +206,21 @@ COOLDOWN = 45
 
 
 def collision(obj1, obj2):
+    """
+    Pré: obj1, obj2 ce sont des object dans les cas qui nous concerne ça va être un tir et soit un joueur ou un ennemi
+    Post: returns: Boolean  vrai si il y a collision faux si il n'y en a pas
+    """
     offset_x = obj2.x - obj1.x
     offset_y = obj2.y - obj1.y
     return obj1.mask.overlap(obj2.mask, (offset_x, offset_y)) != None
 
 
 def main(pseudo_choisi):
+    """
+    fonction qui va initialiser le jeu et faire exécuter les taches
+    Post: pseudo du joueur
+    Pré: -
+    """
     fps = 60
     vel = 6
     jeu = True
@@ -225,6 +238,11 @@ def main(pseudo_choisi):
     global COOLDOWN
 
     def reaffichage():
+        """
+        Fonction qui va s'occuper du réaffichage à l'écran quand ily a des modifications
+        Pré: -
+        Post: -
+        """
 
         fenetre.blit(bg, (0, 0))
         vague_texte = font.render(f"Vague: {vague}", 1, (255, 255, 255))

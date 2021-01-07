@@ -96,7 +96,6 @@ window_profils.mainloop()
 
 # Mise en mémoire du profils sélecionné
 recup_profil = v.get()
-print(recup_profil)
 
 
 # M E N U
