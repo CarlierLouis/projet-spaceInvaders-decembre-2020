@@ -7,11 +7,26 @@ cursor = cnx.cursor()
 
 
 def creation_table_Profils():
+    """
+    Fonction de création de la table des profils dans la db
+
+    PRE:-
+    POST:-
+    """
     cursor.execute("CREATE TABLE Profils (id int primary key not null auto_increment,"
                    "pseudo varchar(255), xp int(255), argent int(255))")
 
 
 def remplir_table_Profils(pseudo, xp, argent):
+    """
+    Fonction pour ajouter de nouveau joueur dans la db
+
+    PRE:
+        type(pseudo) == str
+        type(xp) == int
+        type(argent) == int
+    POST:-
+    """
     sql = "INSERT INTO Profils (pseudo, xp, argent) VALUES (%s, %s, %s)"
     value = (pseudo, xp, argent)
     cursor.execute(sql, value)
@@ -19,6 +34,12 @@ def remplir_table_Profils(pseudo, xp, argent):
 
 
 def recuperer_infos_joueurs():
+    """
+    Fonction récupérant les données des joueurs présentes dans la db
+
+    PRE:-
+    POST: return list
+    """
     infos_joueurs = []
     cursor.execute("SELECT pseudo, xp, argent FROM Profils")
     for i in cursor.fetchall():
@@ -38,6 +59,12 @@ def recuperer_infos_joueurs():
 
 
 def recuperer_pseudos_joueurs():
+    """
+    Fonction de récupération des pseudos des joueurs présents dans la db
+
+    PRE:-
+    POST: return list
+    """
     infos_joueurs = []
     cursor.execute("SELECT pseudo, xp, argent FROM Profils")
     for i in cursor.fetchall():
@@ -58,9 +85,16 @@ def recuperer_pseudos_joueurs():
 
 
 def ajout_xp(xp, argent, pseudo):
+    """
+    Fonction d'ajout d'xp et d'argent dans la db en fonction du pseudo
+
+    PRE:
+        type(pseudo) == str
+        type(xp) == int
+        type(argent) == int
+    POST:-
+    """
     sql = "UPDATE Profils SET xp = xp + %s, argent = argent + %s WHERE pseudo = %s"
     value = (xp, argent, pseudo)
     cursor.execute(sql, value)
     cnx.commit()
-
-

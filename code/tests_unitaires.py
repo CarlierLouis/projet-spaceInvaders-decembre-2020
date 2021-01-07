@@ -1,9 +1,14 @@
 import unittest
-from main import collision, Joueur, Ennemi, Laser
 import pygame
 import os
 
-class TestJeu(unittest.TestCase):
+from main import collision, Joueur, Ennemi, Laser
+from database import recuperer_infos_joueurs
+from database import recuperer_pseudos_joueurs
+
+
+class TestUnitaires(unittest.TestCase):
+    # main
     def test_collision(self):
         """vérification qu'il y a une collision ou pas"""
         joueur = Joueur()
@@ -53,6 +58,12 @@ class TestJeu(unittest.TestCase):
         tir = Laser(-50, -50, img)
         self.assertEqual(tir.hors_ecran(780), True)
 
+    # database
+    def test_recup_infos(self):
+        self.assertIsInstance(recuperer_infos_joueurs(), list)
+
+    def test_recup_pseudos(self):
+        self.assertIsInstance(recuperer_pseudos_joueurs(), list)
 
 
 if __name__ == '__main__':
