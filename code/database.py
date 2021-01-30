@@ -54,7 +54,7 @@ def recuperer_infos_joueurs():
         liste2.append(liste3)
         j += 3
     # Tri décroissant en fonction de l'xp du joueur
-    liste_finale = sorted(liste2, key=lambda a: a[1], reverse=True)
+    liste_finale = sorted(liste2, key=lambda a: a[1], reverse=False)
     return liste_finale
 
 

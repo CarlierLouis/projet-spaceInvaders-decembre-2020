@@ -1,5 +1,6 @@
 from tkinter import *
 from tkinter import messagebox
+from tkinter import ttk
 
 from database import recuperer_infos_joueurs
 from database import recuperer_pseudos_joueurs
@@ -143,16 +144,18 @@ def fenetre_score():
 
     # Personnalisation de la fenêtre
     window_scores.title("Scores")
-    window_scores.geometry("800x500")
-    window_scores.minsize(480, 360)
+    window_scores.geometry("600x360")
+    window_scores.minsize(600, 360)
+    window_scores.maxsize(600, 360)
     window_scores.iconbitmap("images/score.ico")
-    window_scores.config(background='#660000')
+    window_scores.config(background='white')
 
     # Création des frames
     frame_scores = Frame(window_scores, bg='#660000')
-    frame_scores_retour = Frame(window_scores, bg='#660000')
+    frame_scores_retour = Frame(window_scores, bg='white')
 
     # Ajout des textes et boutons
+    '''
     label_scores = Label(window_scores, text="Scores", font=("Arial", 35), bg='#660000', fg='white')
     label2_scores = Label(window_scores, text="{Pseudo, xp, argent}\n", font=("Arial", 15), bg='#660000', fg='black')
     label3_scores = Label(frame_scores, text=recuperer_infos_joueurs(), font=("Arial", 15), bg='#660000', fg='white')
@@ -162,6 +165,30 @@ def fenetre_score():
     label_scores.pack()
     label2_scores.pack()
     label3_scores.pack()
+    bouton_scores_retour.pack()'''
+
+    # Ajout du tableau de scoring avec Treeview
+    label_scores = Label(window_scores, text="Scores", font=("Arial", 35), bg='#660000', fg='white')
+
+    tree = ttk.Treeview(window_scores)
+    tree["columns"] = ("one", "two")
+    tree.column("#0", width=200, minwidth=200, stretch=FALSE)
+    tree.column("one", width=200, minwidth=200, stretch=FALSE)
+    tree.column("two", width=200, minwidth=200, stretch=FALSE)
+
+    tree.heading("#0", text="Pseudo")
+    tree.heading("one", text="xp")
+    tree.heading("two", text="argent")
+
+    for i in range(len(recuperer_infos_joueurs())):
+        tree.insert("", 0, text=recuperer_infos_joueurs()[i][0], values=(recuperer_infos_joueurs()[i][1],
+                                                                         recuperer_infos_joueurs()[i][2]))
+
+    tree.pack()
+
+    bouton_scores_retour = Button(frame_scores_retour, text="retour", font=("Arial", 15), bg='#660000', fg='white',
+                                  command=window_scores.destroy)
+
     bouton_scores_retour.pack()
 
     # Ajout des frames

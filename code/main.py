@@ -255,7 +255,7 @@ def main(pseudo_choisi):
             lost_label = lost_font.render("Game Over", 1, (255, 255, 255))
             fenetre.blit(lost_label, (width / 2 - lost_label.get_width() / 2, height / 2 - lost_label.get_height() / 2))
             pygame.quit()
-            ajout_xp(score, vague, pseudo_choisi)
+            ajout_xp(score, vague-1, pseudo_choisi)
 
         pygame.display.update()
 
