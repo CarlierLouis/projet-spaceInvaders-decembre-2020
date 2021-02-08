@@ -5,6 +5,7 @@ from tkinter import ttk
 from database import recuperer_infos_joueurs
 from database import recuperer_pseudos_joueurs
 from database import remplir_table_Profils
+from database import payement
 
 
 # Fonstion qui appelle le script du jeu
@@ -168,8 +169,6 @@ def fenetre_score():
     bouton_scores_retour.pack()'''
 
     # Ajout du tableau de scoring avec Treeview
-    label_scores = Label(window_scores, text="Scores", font=("Arial", 35), bg='#660000', fg='white')
-
     tree = ttk.Treeview(window_scores)
     tree["columns"] = ("one", "two")
     tree.column("#0", width=200, minwidth=200, stretch=FALSE)
@@ -205,8 +204,12 @@ def fenetre_boutique():
     window_boutique = Tk()
 
     # Personnalisation de la fenêtre
+    def solde_joueur():
+        for j in range(len(recuperer_infos_joueurs())):
+            if recuperer_infos_joueurs()[j][0] == recup_profil:
+                return recuperer_infos_joueurs()[j][2]
     window_boutique.title("Boutique")
-    window_boutique.geometry("800x500")
+    window_boutique.geometry("800x600")
     window_boutique.minsize(480, 360)
     window_boutique.iconbitmap("images/boutique.ico")
     window_boutique.config(background='#660000')
@@ -217,12 +220,66 @@ def fenetre_boutique():
 
     # Ajout des textes et boutons
     label_boutique = Label(window_boutique, text="Boutique", font=("Arial", 35), bg='#660000', fg='white')
+    label_solde = Label(window_boutique, text="Votre solde: " + str(solde_joueur()), font=("Arial", 15), bg='#660000', fg='white')
     label2_boutique = Label(frame_boutique, text="", font=("Arial", 15), bg='#660000', fg='white')
     bouton_boutique_retour = Button(frame_boutique_retour, text="retour", font=("Arial", 15), bg='#660000', fg='white',
                                     command=window_boutique.destroy)
     label_boutique.pack()
+    label_solde.pack()
     label2_boutique.pack()
     bouton_boutique_retour.pack()
+
+    # Contenu de la boutique
+    # Objet 1
+    objet1 = LabelFrame(window_boutique, text="Objet 1", font=("Arial", 20), bg='#660000', padx=20, pady=20)
+    objet1.pack(fill="both", expand="yes")
+    Label(objet1, bg='#660000', font=("Arial", 15), text="Description objet 1 (prix: 50)").pack()
+
+    def achat1():
+        for i in range(len(recuperer_infos_joueurs())):
+            if recuperer_infos_joueurs()[i][0] == recup_profil:
+                if recuperer_infos_joueurs()[i][2] >= 50:
+                    payement(50, recup_profil)
+                    messagebox.showinfo("Boutique", "Achat bien effectué !")
+                else:
+                    messagebox.showinfo("erreur", "Votre solde est insufisant !")
+
+    bouton_achat1 = Button(objet1, text="Acheter", command=achat1)
+    bouton_achat1.pack(side=BOTTOM)
+
+    # Objet 2
+    objet2 = LabelFrame(window_boutique, text="Objet 2", font=("Arial", 20), bg='#660000', padx=20, pady=20)
+    objet2.pack(fill="both", expand="yes")
+    Label(objet2, bg='#660000', font=("Arial", 15), text="Description objet 1 (prix: 50)").pack()
+
+    def achat2():
+        for i in range(len(recuperer_infos_joueurs())):
+            if recuperer_infos_joueurs()[i][0] == recup_profil:
+                if recuperer_infos_joueurs()[i][2] >= 50:
+                    payement(50, recup_profil)
+                    messagebox.showinfo("Boutique", "Achat bien effectué !")
+                else:
+                    messagebox.showinfo("erreur", "Votre solde est insufisant !")
+
+    bouton_achat2 = Button(objet2, text="Acheter", command=achat2)
+    bouton_achat2.pack(side=BOTTOM)
+
+    # Objet 3
+    objet3 = LabelFrame(window_boutique, text="Objet 3", font=("Arial", 20), bg='#660000', padx=20, pady=20)
+    objet3.pack(fill="both", expand="yes")
+    Label(objet3, bg='#660000', font=("Arial", 15), text="Description objet 1 (prix: 50)").pack()
+
+    def achat3():
+        for i in range(len(recuperer_infos_joueurs())):
+            if recuperer_infos_joueurs()[i][0] == recup_profil:
+                if recuperer_infos_joueurs()[i][2] >= 50:
+                    payement(50, recup_profil)
+                    messagebox.showinfo("Boutique", "Achat bien effectué !")
+                else:
+                    messagebox.showinfo("erreur", "Votre solde est insufisant !")
+
+    bouton_achat3 = Button(objet3, text="Acheter", command=achat3)
+    bouton_achat3.pack(side=BOTTOM)
 
     # Ajout des frames
     frame_boutique.pack()

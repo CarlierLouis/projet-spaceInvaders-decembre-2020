@@ -98,3 +98,18 @@ def ajout_xp(xp, argent, pseudo):
     value = (xp, argent, pseudo)
     cursor.execute(sql, value)
     cnx.commit()
+
+
+def payement(argent, pseudo):
+    """
+    Fonction de retrait d'argent dans la db après l'achat d'un objet dans la boutique en fonction du pseudo
+
+    PRE:
+        type(pseudo) == str
+        type(argent) == int
+    POST:-
+    """
+    sql = "UPDATE Profils Set argent = argent - %s WHERE pseudo = %s"
+    value = (argent, pseudo)
+    cursor.execute(sql, value)
+    cnx.commit()
