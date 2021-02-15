@@ -6,6 +6,12 @@ from database import recuperer_infos_joueurs
 from database import recuperer_pseudos_joueurs
 from database import remplir_table_Profils
 from database import payement
+from database import ajout_objet1
+from database import ajout_objet2
+from database import ajout_objet3
+from database import info_objet1
+from database import info_objet2
+from database import info_objet3
 
 
 # Fonstion qui appelle le script du jeu
@@ -106,7 +112,7 @@ def fenetre_menu():
     window_menu = Tk()
 
     # Personnalisation de la fenêtre
-    window_menu.title("Space Invaders")
+    window_menu.title("Space Invaders    " + "[" + recup_profil + "]")
     window_menu.geometry("1080x720")
     window_menu.minsize(480, 360)
     window_menu.iconbitmap("images/logo.ico")
@@ -126,10 +132,13 @@ def fenetre_menu():
                           relief="ridge", command=fenetre_score)
     bouton_boutique = Button(frame_menu, text="Boutique", font=("Arial", 25), bg='white', fg='#121517', bd="10",
                              relief="ridge", command=fenetre_boutique)
+    bouton_inventaire = Button(window_menu, text="Inventaire", font=("Arial", 15), bg='#660000', fg='white',
+                               command=inventaire)
 
     bouton_jouer.pack(pady=25, fill=X)
     bouton_score.pack(pady=25, fill=X)
     bouton_boutique.pack(pady=25, fill=X)
+    bouton_inventaire.pack(pady=25, side=BOTTOM)
 
     # Ajout de la frame
     frame_menu.pack(expand=YES)
@@ -154,19 +163,6 @@ def fenetre_score():
     # Création des frames
     frame_scores = Frame(window_scores, bg='#660000')
     frame_scores_retour = Frame(window_scores, bg='white')
-
-    # Ajout des textes et boutons
-    '''
-    label_scores = Label(window_scores, text="Scores", font=("Arial", 35), bg='#660000', fg='white')
-    label2_scores = Label(window_scores, text="{Pseudo, xp, argent}\n", font=("Arial", 15), bg='#660000', fg='black')
-    label3_scores = Label(frame_scores, text=recuperer_infos_joueurs(), font=("Arial", 15), bg='#660000', fg='white')
-    bouton_scores_retour = Button(frame_scores_retour, text="retour", font=("Arial", 15), bg='#660000', fg='white',
-                                  command=window_scores.destroy)
-
-    label_scores.pack()
-    label2_scores.pack()
-    label3_scores.pack()
-    bouton_scores_retour.pack()'''
 
     # Ajout du tableau de scoring avec Treeview
     tree = ttk.Treeview(window_scores)
@@ -238,11 +234,17 @@ def fenetre_boutique():
     def achat1():
         for i in range(len(recuperer_infos_joueurs())):
             if recuperer_infos_joueurs()[i][0] == recup_profil:
-                if recuperer_infos_joueurs()[i][2] >= 50:
-                    payement(50, recup_profil)
-                    messagebox.showinfo("Boutique", "Achat bien effectué !")
-                else:
-                    messagebox.showinfo("erreur", "Votre solde est insufisant !")
+                for j in range(len(info_objet1())):
+                    if info_objet1()[j] == recup_profil:
+                        if info_objet1()[j+1] == 1:
+                            messagebox.showinfo("erreur", "Vous possédez déjà cet objet")
+                        else:
+                            if recuperer_infos_joueurs()[i][2] >= 50:
+                                payement(50, recup_profil)
+                                ajout_objet1(1, recup_profil)
+                                messagebox.showinfo("Boutique", "Achat bien effectué !")
+                            else:
+                                messagebox.showinfo("erreur", "Votre solde est insufisant !")
 
     bouton_achat1 = Button(objet1, text="Acheter", command=achat1)
     bouton_achat1.pack(side=BOTTOM)
@@ -250,16 +252,22 @@ def fenetre_boutique():
     # Objet 2
     objet2 = LabelFrame(window_boutique, text="Objet 2", font=("Arial", 20), bg='#660000', padx=20, pady=20)
     objet2.pack(fill="both", expand="yes")
-    Label(objet2, bg='#660000', font=("Arial", 15), text="Description objet 1 (prix: 50)").pack()
+    Label(objet2, bg='#660000', font=("Arial", 15), text="Description objet 2 (prix: 50)").pack()
 
     def achat2():
         for i in range(len(recuperer_infos_joueurs())):
             if recuperer_infos_joueurs()[i][0] == recup_profil:
-                if recuperer_infos_joueurs()[i][2] >= 50:
-                    payement(50, recup_profil)
-                    messagebox.showinfo("Boutique", "Achat bien effectué !")
-                else:
-                    messagebox.showinfo("erreur", "Votre solde est insufisant !")
+                for j in range(len(info_objet2())):
+                    if info_objet2()[j] == recup_profil:
+                        if info_objet2()[j + 1] == 1:
+                            messagebox.showinfo("erreur", "Vous possédez déjà cet objet")
+                        else:
+                            if recuperer_infos_joueurs()[i][2] >= 50:
+                                payement(50, recup_profil)
+                                ajout_objet2(1, recup_profil)
+                                messagebox.showinfo("Boutique", "Achat bien effectué !")
+                            else:
+                                messagebox.showinfo("erreur", "Votre solde est insufisant !")
 
     bouton_achat2 = Button(objet2, text="Acheter", command=achat2)
     bouton_achat2.pack(side=BOTTOM)
@@ -267,19 +275,38 @@ def fenetre_boutique():
     # Objet 3
     objet3 = LabelFrame(window_boutique, text="Objet 3", font=("Arial", 20), bg='#660000', padx=20, pady=20)
     objet3.pack(fill="both", expand="yes")
-    Label(objet3, bg='#660000', font=("Arial", 15), text="Description objet 1 (prix: 50)").pack()
+    Label(objet3, bg='#660000', font=("Arial", 15), text="Description objet 3 (prix: 50)").pack()
 
     def achat3():
         for i in range(len(recuperer_infos_joueurs())):
             if recuperer_infos_joueurs()[i][0] == recup_profil:
-                if recuperer_infos_joueurs()[i][2] >= 50:
-                    payement(50, recup_profil)
-                    messagebox.showinfo("Boutique", "Achat bien effectué !")
-                else:
-                    messagebox.showinfo("erreur", "Votre solde est insufisant !")
+                for j in range(len(info_objet3())):
+                    if info_objet3()[j] == recup_profil:
+                        if info_objet3()[j + 1] == 1:
+                            messagebox.showinfo("erreur", "Vous possédez déjà cet objet")
+                        else:
+                            if recuperer_infos_joueurs()[i][2] >= 50:
+                                payement(50, recup_profil)
+                                ajout_objet3(1, recup_profil)
+                                messagebox.showinfo("Boutique", "Achat bien effectué !")
+                            else:
+                                messagebox.showinfo("erreur", "Votre solde est insufisant !")
 
     bouton_achat3 = Button(objet3, text="Acheter", command=achat3)
     bouton_achat3.pack(side=BOTTOM)
+
+    '''
+    # Objet 4
+    objet4 = LabelFrame(window_boutique, text="Objet 4", font=("Arial", 20), bg='#660000', padx=20, pady=20)
+    objet4.pack(fill="both", expand="yes")
+    Label(objet4, bg='#660000', font=("Arial", 15), text="Description objet 4 (prix: 1000)").pack()
+
+    def achat4():
+        
+
+    bouton_achat4 = Button(objet4, text="Acheter", command=achat4)
+    bouton_achat4.pack(side=BOTTOM)
+    '''
 
     # Ajout des frames
     frame_boutique.pack()
@@ -287,6 +314,33 @@ def fenetre_boutique():
 
     # Affichage
     window_boutique.mainloop()
+
+
+# Affiche de l'inventaire du joueur (objets qu'il possède déjà)
+def inventaire():
+    ok1 = ""
+    ok2 = ""
+    ok3 = ""
+    for j in range(len(info_objet1())):
+        if info_objet1()[j] == recup_profil:
+            if info_objet1()[j + 1] == 1:
+                ok1 = "objet1, "
+            else:
+                ok1 = ""
+    for j in range(len(info_objet2())):
+        if info_objet2()[j] == recup_profil:
+            if info_objet2()[j + 1] == 1:
+                ok2 = "objet2, "
+            else:
+                ok2 = ""
+    for j in range(len(info_objet3())):
+        if info_objet3()[j] == recup_profil:
+            if info_objet3()[j + 1] == 1:
+                ok3 = "objet3 "
+            else:
+                ok3 = ""
+    ok_final = ok1 + ok2 + ok3
+    messagebox.showinfo("Inventaire", "Vous possédez : " + ok_final)
 
 
 fenetre_menu()

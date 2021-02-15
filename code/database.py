@@ -14,7 +14,8 @@ def creation_table_Profils():
     POST:-
     """
     cursor.execute("CREATE TABLE Profils (id int primary key not null auto_increment,"
-                   "pseudo varchar(255), xp int(255), argent int(255))")
+                   "pseudo varchar(255), xp int(255), argent int(255), objet1 int(255), objet2 int(255),"
+                   " objet3 int(255)")
 
 
 def remplir_table_Profils(pseudo, xp, argent):
@@ -113,3 +114,93 @@ def payement(argent, pseudo):
     value = (argent, pseudo)
     cursor.execute(sql, value)
     cnx.commit()
+
+
+def ajout_objet1(objet1, pseudo):
+    """
+        Fonction d'ajout de l'objet1 dans la db en fonction du pseudo (1 si le joueur posséde l'objet)
+
+        PRE:
+            type(pseudo) == str
+            type(objet1) == int
+        POST:-
+        """
+    sql = "UPDATE Profils Set objet1 = %s WHERE pseudo = %s"
+    value = (objet1, pseudo)
+    cursor.execute(sql, value)
+    cnx.commit()
+
+
+def ajout_objet2(objet2, pseudo):
+    """
+        Fonction d'ajout de l'objet2 dans la db en fonction du pseudo (1 si le joueur posséde l'objet)
+
+        PRE:
+            type(pseudo) == str
+            type(objet2) == int
+        POST:-
+        """
+    sql = "UPDATE Profils Set objet2 = %s WHERE pseudo = %s"
+    value = (objet2, pseudo)
+    cursor.execute(sql, value)
+    cnx.commit()
+
+
+def ajout_objet3(objet3, pseudo):
+    """
+        Fonction d'ajout de l'objet2 dans la db en fonction du pseudo (1 si le joueur posséde l'objet)
+
+        PRE:
+            type(pseudo) == str
+            type(objet3) == int
+        POST:-
+        """
+    sql = "UPDATE Profils Set objet3 = %s WHERE pseudo = %s"
+    value = (objet3, pseudo)
+    cursor.execute(sql, value)
+    cnx.commit()
+
+
+def info_objet1():
+    """
+        Fonction de récupération du "status" de l'objet1 pour chaque joueur
+
+        PRE:-
+        POST: return list
+        """
+    infos_objet1 = []
+    cursor.execute("SELECT pseudo, objet1 FROM Profils")
+    for i in cursor.fetchall():
+        infos_objet1.append(i)
+    liste = [x for elem in infos_objet1 for x in elem]
+    return liste
+
+
+def info_objet2():
+    """
+        Fonction de récupération du "status" de l'objet2 pour chaque joueur
+
+        PRE:-
+        POST: return list
+        """
+    infos_objet2 = []
+    cursor.execute("SELECT pseudo, objet2 FROM Profils")
+    for i in cursor.fetchall():
+        infos_objet2.append(i)
+    liste = [x for elem in infos_objet2 for x in elem]
+    return liste
+
+
+def info_objet3():
+    """
+        Fonction de récupération du "status" de l'objet3 pour chaque joueur
+
+        PRE:-
+        POST: return list
+        """
+    infos_objet3 = []
+    cursor.execute("SELECT pseudo, objet3 FROM Profils")
+    for i in cursor.fetchall():
+        infos_objet3.append(i)
+    liste = [x for elem in infos_objet3 for x in elem]
+    return liste
