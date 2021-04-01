@@ -186,9 +186,7 @@ class Laser:
         return collision(self, obj)
 
 
-
 width, height = 1000, 780
-
 
 joueur = pygame.image.load(os.path.join("images", "ship.gif"))
 ennemi = pygame.image.load(os.path.join("images", "alien.gif"))
@@ -238,7 +236,7 @@ def main(pseudo_choisi):
 
     def reaffichage():
         """
-        Fonction qui va s'occuper du réaffichage à l'écran quand ily a des modifications
+        Fonction qui va s'occuper du réaffichage à l'écran quand il y a des modifications
         Pré: -
         Post: -
         """
@@ -255,7 +253,7 @@ def main(pseudo_choisi):
             lost_label = lost_font.render("Game Over", 1, (255, 255, 255))
             fenetre.blit(lost_label, (width / 2 - lost_label.get_width() / 2, height / 2 - lost_label.get_height() / 2))
             pygame.quit()
-            ajout_xp(score, vague-1, pseudo_choisi)
+            ajout_xp(score, vague - 1, pseudo_choisi)
 
         pygame.display.update()
 
@@ -303,6 +301,3 @@ def main(pseudo_choisi):
                 ennemis.remove(ennemi)
 
         joueur.deplacement_laser(-vel_laser, ennemis)
-
-
-
