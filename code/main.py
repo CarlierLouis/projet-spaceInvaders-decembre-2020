@@ -1,303 +1,372 @@
-import pygame
-import random
-import os
-
 from database import ajout_xp
+import random
+import sys
+import time
+import os
+import pygame
 
+pygame.init()
+pygame.font.init()
+myfont = pygame.font.SysFont('Comic Sans MS', 50)
+pygame.display.set_caption("Space invaders")
+width, height = 1800, 1000
+screen=pygame.display.set_mode((width, height))
+bg = pygame.transform.scale(pygame.image.load(os.path.join("images", "space.png")), (width, height))
+fps=60
+fpsclock=pygame.time.Clock()
+blanc=(255,255,255)
+noir=(0,0,0)
+vert=(0,255,0)
 
-class Joueur:
+cooldown = 50
+alien_img = ["images/monstre5.png","images/alien.gif"]
 
+class Argent:
+    """
+    Classe qui crée la monnaie du jeu
+    """
     def __init__(self):
         """
-        Class créant le joueur , permet aussi de le controler et de faire déplacer son laser
-        Pré:-
-        Post:-
+            Définition de la position, l'image du coin
         """
-        self.x = 487
-        self.y = 620
-        self.vie = 60
-        self.img = joueur
-        self.laser_img = laser_joueur
-        self.mask = pygame.mask.from_surface(self.img)
-        self.vie_max = 60
-        self.lasers = []
-        self.cool_down_counter = 0
+        self.x = random.randrange(0,width-50)
+        self.y = height - 50
+        self.img = pygame.transform.scale(pygame.image.load('images/coin.png'), (50, 50)) 
+        self.rect = self.img.get_rect()
+        self.rect.topleft = (self.x, self.y)
 
-    def dessin(self, fenetre):
+    def affichage(self):
         """
-        affichage du joueur des lasers et de la bar de vie sur l'écran
-        Pré:fenetre
-        Post:-
+            Affiche l'argent
         """
-        fenetre.blit(self.img, (self.x, self.y))
-        for laser in self.lasers:
-            laser.dessin(fenetre)
-        self.barre_vie(fenetre)
+        screen.blit(self.img, (self.x,self.y))
+        self.rect.topleft = (self.x, self.y)
 
-    def deplacement_laser(self, vel, objs):
+    def collision(self, obj,coins):
         """
-        deplacement des lasers plus test si il y a des collisions
-        Pré: vel: int , objs : object
+            Vérifie si il y a une collision entre le joueur et l'argent si il y en a une l'argent est retirer
+            Pré:    Obj : le joueur sur l'écrant qui est la classe Joueur
+                    coins : tableaux contenant l'argent
         """
-        self.cooldown()
-        for laser in self.lasers:
-            laser.deplacement(vel)
-            if laser.hors_ecran(height):
-                self.lasers.remove(laser)
-            else:
-                for obj in objs:
-                    if laser.collision(obj):
-                        objs.remove(obj)
-                        global score
-                        score += 20
-                        if laser in self.lasers:
-                            self.lasers.remove(laser)
+        if self.rect.colliderect(obj.rect) :
+            obj.argents += 1
+            if self in coins:
+                coins.remove(self)
 
-    def cooldown(self):
+class Tir:
+    """
+        Classe qui crée le tir
+    """
+    def __init__(self,x,y):
         """
-        Permet de gerer le timing du tir du joueur
-        Pré: -
-        Post: -
+            Pré: x,y qui sont la position du joueur sur l'écran
         """
-        if self.cool_down_counter >= COOLDOWN:
-            self.cool_down_counter = 0
-        elif self.cool_down_counter > 0:
-            self.cool_down_counter += 1
+        self.x = x+10
+        self.y = y
+        self.img = pygame.transform.scale(pygame.image.load('images/shot.gif'), (30, 100)) 
+        self.rect = self.img.get_rect()
+        self.rect.topleft = (self.x, self.y)
 
-    def tir(self):
+    def dep(self):
         """
-        Créer l'objet Tir
+            Déplacement du tir
         """
-        if self.cool_down_counter == 0:
-            laser = Laser(self.x + 10, self.y, self.laser_img)
-            self.lasers.append(laser)
-            self.cool_down_counter = 1
+        self.y -= 50
 
-    def barre_vie(self, fenetre):
+    def affichage(self):
         """
-        affiche la barre de vie
-        Pré: display
-        Post: -
+            Affichage du tir
         """
-        pygame.draw.rect(fenetre, (0, 255, 0), (self.x, self.y + self.img.get_height() + 10, self.img.get_width()
-                                                * (self.vie / self.vie_max), 10))
+        screen.blit(self.img, (self.x,self.y))
+        self.rect.topleft = (self.x, self.y)
 
+    def collision(self, ennemis,tirs):
+        """
+            Pré:    ennemis : tableaux qui contient les ennemis
+                    tire :  tableaux qui contient les tirs
+            Test la collision entre les tirs et les ennemis
+        """
+        if self.y < 0:
+            tirs.remove(self)
+        else:
+            self.dep()
+            self.affichage()
+            for ennemi in ennemis:
+                if ennemi.rect.colliderect(self):
+                    ennemi.vie = 0
+                    if self in tirs:
+                        tirs.remove(self)
 
 class Ennemi:
-
+    """
+        Classe qui crée l'ennemi
+    """
     def __init__(self, x, y):
         """
-        Classe Ennemi sert à l'affichage, déplacement ennemi et ses lasers
-        Pré: x,y :int y doiy être supérieur à height
-        Post: -
-        """
-        if y > height:
-            raise ValueError
-        self.x = x
-        self.y = y
-        self.laser_img = laser_ennemi
-        self.img = ennemi
-        self.mask = pygame.mask.from_surface(self.img)
-        self.lasers = []
-
-    def deplacement(self, vel):
-        """
-        effectue le déplacement des Ennemis
-        Pré: vel:int
-        Post: -
-        """
-        self.y += vel
-
-    def dessin(self, fenetre):
-        """
-        affiche l'ennemi
-        Pré: fenetre: display
-        """
-        fenetre.blit(self.img, (self.x, self.y))
-        for laser in self.lasers:
-            laser.dessin(fenetre)
-
-    def deplacement_laser(self, vel, obj):
-        """
-        deplace les lasers tirer par l'ennemi
-        Pré: vel:int, obj:objects
-        """
-        for laser in self.lasers:
-            laser.deplacement(vel)
-            if laser.hors_ecran(height):
-                self.lasers.remove(laser)
-            elif laser.collision(obj):
-                obj.vie -= 10
-                self.lasers.remove(laser)
-
-    def tir(self):
-        """
-        Créer le tir
-        Pré: -
-        Post: -
-        """
-        laser = Laser(self.x + 20, self.y + 30, self.laser_img)
-        self.lasers.append(laser)
-
-
-class Laser:
-
-    def __init__(self, x, y, img):
-        """
-        Classe mettant en place le tir effectuer soit par le joueur ou l'ennemmi
-        Pré: x,y :int , img: display
-        Post: -
+            Placment de l'ennemi plus sa vie 
+            Pré:    x,y : positionnement de l'ennemi sur l'écran
         """
         self.x = x
         self.y = y
-        self.img = img
-        self.mask = pygame.mask.from_surface(self.img)
+        self.vie = 1
+        self.img = pygame.transform.scale(pygame.image.load(alien_img[random.randrange(0,2)]), (70, 70)) 
+        self.rect = self.img.get_rect()
+        self.rect.topleft = (self.x, self.y)
 
-    def dessin(self, fenetre):
+    def dep(self):
         """
-        Affichage du laser
-        Pré: fenetre: display
-        Post: -
+            déplacement des ennemis
         """
-        fenetre.blit(self.img, (self.x, self.y - 20))
-
-    def deplacement(self, vel):
+        self.y += 2
+    
+    def affichage(self):
         """
-        deplacement du laser
-        Pré: vel: int
-        Post: -
+            Affichage des ennemis
         """
-        self.y += vel
+        screen.blit(self.img, (self.x,self.y))
+        self.rect.topleft = (self.x, self.y)
 
-    def hors_ecran(self, height):
+    def collision(self, obj,ennemis):
         """
-        teste si le laser est hors de l'écran ou pas
-        Pré: height : int
-        Post: boolean
+            Pré:    ennemis : tableaux qui contient les ennemis
+                    obj : joueur
+            Test collision entre ennemis et le joueur
+            Test si les ennemis sont toujours sur l'écran
         """
-        return not (height >= self.y >= -30)
+        if self.rect.colliderect(obj.rect) :
+            obj.nbr_vies -= 1
+            if self in ennemis:
+                ennemis.remove(self)
 
-    def collision(self, obj):
+        if self.y > height:
+            if self in ennemis:
+                ennemis.remove(self)
+
+class Joueur:
+    def __init__(self):
         """
-        teste si il y a une collision
-        Pré: obj: object
-        Post: boolean
+            Classe du joueur 
+            contient son placement, image, argent, cooldown, vitesse
         """
-        return collision(self, obj)
+        self.x = (width  / 2) - 60
+        self.y = height - 50
+        self.img = pygame.transform.scale(pygame.image.load('images/ship.gif'), (50, 50)) 
+        self.rect = self.img.get_rect()
+        self.rect.topleft = (self.x, self.y)
+        self.nbr_vies = 1
+        self.img_vie = pygame.image.load('images/coeur.png')
+        self.cooldown = 0
+        self.argents = 30
+        self.step = 7
 
+    def dep(self, pas):
+        """
+            Pré: pas : sa vitesse de déplacement
+            déplacement du joueur
+        """
+        self.x += pas * self.step
 
-width, height = 1000, 780
+    def affichage(self):
+        """
+            affiche le joueur
+        """
+        screen.blit(self.img, (self.x,self.y))
+        self.rect.topleft = (self.x, self.y)
+        
+    def affichage_vie(self, i):
+        """
+            affiche la vie du joueur
+        """
+        screen.blit(self.img_vie, (10 + i * 40, 10))
 
-joueur = pygame.image.load(os.path.join("images", "ship.gif"))
-ennemi = pygame.image.load(os.path.join("images", "alien.gif"))
-laser_joueur = pygame.image.load(os.path.join("images", "shot.gif"))
-laser_ennemi = pygame.image.load(os.path.join("images", "shot_alien.png"))
+    def hors_ecran(self):
+        """
+            test si le joueur dépasse les bords de l'écran
+        """
+        if self.x > width-self.img.get_size()[0] :
+            self.x = width-self.img.get_size()[0]
+        elif self.x < 0 :
+            self.x = 0
 
-COOLDOWN = 45
+class Jeu():
+    def __init__(self):
+        """
+            Classe qui contien le jeu en lui même
+        """
+        self.tour = 0
+        self.nbr_ennemi = 0
+        self.fin = False
+        self.shop = False
+        self.tour_fin = False
+        self.coins = []
+        self.ennemis = []  
+        self.tirs = []
+        self.joueur = Joueur()
 
+    def affichage_texte(self):
+        """
+            Affiche le texte sur l'écran
+        """
+        screen.blit(bg,(0,0))
+        texte_tour = myfont.render('Tour '+ str(self.tour), True, (255,255,255))
+        texte_argent = myfont.render('Argent '+ str(self.joueur.argents), True, (255,255,255))
+        screen.blit(texte_tour,(10,100))
+        screen.blit(texte_argent,(10,150))
 
-def collision(obj1, obj2):
+    def affichage_coins(self):
+        """
+            Affiche l'argent et test la collision 
+        """
+        for coin in self.coins:
+            coin.collision(self.joueur,self.coins)
+            coin.affichage()
+
+    def affichage_joueur(self):
+        """
+            Affiche le joueur test si il est sur l'écran affiche sa vie
+        """
+        self.joueur.hors_ecran()
+        self.joueur.affichage()
+        for i in range(self.joueur.nbr_vies) :
+            self.joueur.affichage_vie(i)
+
+    def fin_game(self):
+        """
+            Test si la partie est finis
+            Test à quel tour on est 
+            Test si on doit aller dans le shop et l'affiche
+        """
+        self.joueur.cooldown +=1
+        if self.joueur.nbr_vies == 0 :
+            self.fin = True
+        if len(self.ennemis) == 0:
+            if self.tour == 0:
+                self.tour +=1
+                self.tour_fin = True
+                self.nbr_ennemi = 10
+            elif self.shop == True:
+                time.sleep(0.1)
+                erreur = myfont.render('Pas assez d argents ', True, (255,0,0))
+                shop_argent = myfont.render('1. Vie +1, 10$ ', True, (255,255,255))
+                screen.blit(shop_argent,(300,200))
+                shop_vitesse_deplacement = myfont.render('2. Vitesse de deplacement +1, 15$ ', True, (255,255,255))
+                screen.blit(shop_vitesse_deplacement,(300,400))
+                shop_vitesse_tir = myfont.render('3. Vitesse de Tir +1, 20$ ', True, (255,255,255))
+                screen.blit(shop_vitesse_tir,(300,600))
+                key_input = pygame.key.get_pressed()   
+                if key_input[pygame.K_F1]:
+                    if self.joueur.argents >= 10:
+                        self.joueur.nbr_vies +=1
+                        self.joueur.argents -= 10
+                    else:
+                        screen.blit(erreur,(300,800))
+
+                if key_input[pygame.K_F2]:
+                    if self.joueur.argents >= 15:
+                        self.joueur.step += 1
+                        self.joueur.argents -= 15
+                    else:
+                        screen.blit(erreur,(300,800))
+
+                if key_input[pygame.K_F3]:
+                    if self.joueur.argents >= 20:
+                        self.joueur.cooldown -=1
+                        self.joueur.argents -= 20
+                    else:
+                        screen.blit(erreur,(300,800))
+
+                if key_input[pygame.K_F4]:
+                    self.shop = False
+                    self.tour_fin = True
+            else:
+                self.shop = True
+                self.tour += 1
+                self.nbr_ennemi += 10
+    
+        if self.tour_fin:
+            self.tour_fin = False
+            for i in range(self.nbr_ennemi):
+                self.ennemis.append(Ennemi(random.randrange(0,width-50),-random.randrange(0,800)))
+
+    def key_deplacement(self):
+        """
+            Test quel touche sont appuyer pour effectuer 
+            Le déplacement du joueur,le tir et l'exit
+        """
+        key_input = pygame.key.get_pressed()   
+        if key_input[pygame.K_SPACE]:
+            if self.joueur.cooldown >= cooldown:
+                self.joueur.cooldown = 0
+                self.tirs.append(Tir(self.joueur.x,self.joueur.y))
+        if key_input[pygame.K_RIGHT]:
+            self.joueur.dep(1)
+            
+        if key_input[pygame.K_LEFT]:
+            self.joueur.dep(-1)
+
+        if key_input[pygame.K_ESCAPE]:
+            pygame.quit()
+            sys.exit()
+
+        for eve in pygame.event.get():
+            if eve.type==pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+
+    def affichage_ennemis(self):
+        """
+            Affiche les ennemis et test leur collision
+            Regarde si il y a de l'argent qui tombe
+        """
+        for ennemi in self.ennemis:
+            ennemi.dep()
+            ennemi.collision(self.joueur,self.ennemis)
+            ennemi.affichage()
+            if ennemi.vie == 0:
+                r = random.randrange(0, 5)
+                if r == 1:
+                    self.coins.append(Argent())
+                if ennemi in self.ennemis:
+                    self.ennemis.remove(ennemi)
+        
+    def affichage_tir(self):
+        """
+            Affiche les tirs du joueur
+        """
+        for tir in self.tirs:
+            tir.collision(self.ennemis, self.tirs)
+
+def jeu():
     """
-    Pré: obj1, obj2 ce sont des object dans les cas qui nous concerne ça va être un tir et soit un joueur ou un ennemi
-    Post: returns: Boolean  vrai si il y a collision faux si il n'y en a pas
+        Contient tous les appels de la classe Jeu pour faire fonctionner le jeu
     """
-    offset_x = obj2.x - obj1.x
-    offset_y = obj2.y - obj1.y
-    return obj1.mask.overlap(obj2.mask, (offset_x, offset_y)) is not None
+    game = Jeu()
+    while not game.fin:
+        game.key_deplacement()
+        game.affichage_texte()
+        game.affichage_coins()
+        game.affichage_joueur()
+        game.affichage_ennemis()
+        game.affichage_tir()
+        game.fin_game()
+        pygame.display.update()
+        fpsclock.tick(fps)
+
 
 
 def main(pseudo_choisi):
     """
-    fonction qui va initialiser le jeu et faire exécuter les taches
-    Post: pseudo du joueur
-    Pré: -
+        Contient l'appel de jeu()
     """
-    pygame.init()
-    pygame.font.init()
-    bg = pygame.transform.scale(pygame.image.load(os.path.join("images", "space.png")), (width, height))
-    fenetre = pygame.display.set_mode((width, height))
-    pygame.display.set_caption("Space invaders")
-    global score
-    score = 0
-    fps = 60
-    vel = 6
-    jeu = True
-    clock = pygame.time.Clock()
-    vague = 0
-    font = pygame.font.SysFont("comicsans", 50)
-    lost_font = pygame.font.SysFont("comicsans", 100)
-    joueur = Joueur()
-    ennemis = []
-    longueur_vague = 3
-    vel_ennemi = 1
-    perdu = False
-    vel_laser = 9
-    global COOLDOWN
-
-    def reaffichage():
-        """
-        Fonction qui va s'occuper du réaffichage à l'écran quand il y a des modifications
-        Pré: -
-        Post: -
-        """
-
-        fenetre.blit(bg, (0, 0))
-        vague_texte = font.render(f"Vague: {vague}", 1, (255, 255, 255))
-        score_texte = font.render(f"Score: {score}", 1, (255, 255, 255))
-        fenetre.blit(vague_texte, (10, 10))
-        fenetre.blit(score_texte, (10, 50))
-        for ennemi in ennemis:
-            ennemi.dessin(fenetre)
-        joueur.dessin(fenetre)
-        if perdu:
-            lost_label = lost_font.render("Game Over", 1, (255, 255, 255))
-            fenetre.blit(lost_label, (width / 2 - lost_label.get_width() / 2, height / 2 - lost_label.get_height() / 2))
-            pygame.quit()
-            ajout_xp(score, vague - 1, pseudo_choisi)
-
-        pygame.display.update()
-
-    while jeu:
-
-        clock.tick(fps)
-
-        reaffichage()
-
-        if joueur.vie <= 0:
-            perdu = True
-
-        if len(ennemis) == 0:
-            longueur_vague += 3
-            vague += 1
-            for i in range(longueur_vague):
-                ennemi = Ennemi(random.randrange(70, width - 70), random.randrange(-1000 + vague * -100, -200))
-                ennemis.append(ennemi)
-
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                quit()
-
-        keys = pygame.key.get_pressed()
-
-        if keys[pygame.K_RIGHT] and joueur.x + vel + 32 < width:
-            joueur.x += vel
-
-        if keys[pygame.K_LEFT] and joueur.x - vel > 0:
-            joueur.x -= vel
-
-        if keys[pygame.K_SPACE]:
-            joueur.tir()
-
-        for ennemi in ennemis:
-            ennemi.deplacement(vel_ennemi)
-            ennemi.deplacement_laser(vel_laser, joueur)
-            if random.randrange(0, fps * 3) == 1:
-                ennemi.tir()
-            if collision(ennemi, joueur):
-                joueur.vie -= 20
-                score += 20
-                ennemis.remove(ennemi)
-            elif ennemi.y > height:
-                ennemis.remove(ennemi)
-
-        joueur.deplacement_laser(-vel_laser, ennemis)
+    jeu()
+    
+    screen.blit(bg, (0, 0))
+    lost_label = myfont.render("Game Over", 1, (255, 255, 255))
+    screen.blit(lost_label, (width / 2 - lost_label.get_width() / 2, height / 2 - lost_label.get_height() / 2))
+    pygame.display.update()
+    time.sleep(3)
+    pygame.quit()
+    sys.exit()
+    
+    
+    

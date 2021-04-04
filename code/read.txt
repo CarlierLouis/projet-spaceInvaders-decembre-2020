@@ -1,3 +1,0 @@
-Afficher des coins quand on tue des ennemis
-faire une pause avant de lancer chaque round pour pouvoir acheter des améliorations (tir rapide, puissance de tir, déplacement rapide, etc)
-faire un round avec un boss(ex: tour 10)
