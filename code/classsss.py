@@ -33,7 +33,7 @@ class Argent:
         screen.blit(self.img, (self.x,self.y))
         self.rect.topleft = (self.x, self.y)
 
-    def collision(self, obj):
+    def collision(self, obj,coins):
         if self.rect.colliderect(obj.rect) :
             obj.argents += 1
             if self in coins:
@@ -54,7 +54,7 @@ class Tir:
         screen.blit(self.img, (self.x,self.y))
         self.rect.topleft = (self.x, self.y)
 
-    def collision(self):
+    def collision(self, ennemis,tirs):
         if self.y < 0:
             tirs.remove(self)
         else:
@@ -82,7 +82,7 @@ class Ennemi:
         screen.blit(self.img, (self.x,self.y))
         self.rect.topleft = (self.x, self.y)
 
-    def collision(self, obj):
+    def collision(self, obj,ennemis):
         if self.rect.colliderect(obj.rect) :
             obj.nbr_vies -= 1
             if self in ennemis:
@@ -121,40 +121,46 @@ class Joueur:
         elif self.x < 0 :
             self.x = 0
 
+class Jeu():
+    def __init__(self):
+        self.tour = 0
+        self.nbr_ennemi = 0
+        self.fin = False
+        self.shop = False
+        self.tour_fin = False
+        self.coins = []
+        self.ennemis = []  
+        self.tirs = []
+        self.joueur = Joueur()
 
-def jeu():
-    tour = 0
-    fin = False
-    nbr_ennemi = 0
-    global ennemis, tirs, coins
-    coins = []
-    ennemis = []  
-    tirs = []
-    shop = False
-    joueur = Joueur()
-    tour_fin = False
-    while not fin:
+    def affichage_texte(self):
         screen.blit(bg,(0,0))
-        texte_tour = myfont.render('Tour '+ str(tour), True, (255,255,255))
-        texte_argent = myfont.render('Argent '+ str(joueur.argents), True, (255,255,255))
+        texte_tour = myfont.render('Tour '+ str(self.tour), True, (255,255,255))
+        texte_argent = myfont.render('Argent '+ str(self.joueur.argents), True, (255,255,255))
         screen.blit(texte_tour,(10,100))
         screen.blit(texte_argent,(10,150))
-        
-        for coin in coins:
-            coin.collision(joueur)
+
+    def affichage_coins(self):
+        for coin in self.coins:
+            coin.collision(self.joueur,self.coins)
             coin.affichage()
 
-        joueur.hors_ecran()
-        joueur.affichage()
-        for i in range(joueur.nbr_vies) :
-            joueur.affichage_vie(i)
+    def affichage_joueur(self):
+        self.joueur.hors_ecran()
+        self.joueur.affichage()
+        for i in range(self.joueur.nbr_vies) :
+            self.joueur.affichage_vie(i)
 
-        if len(ennemis) == 0:
-            if tour == 0:
-                tour +=1
-                tour_fin = True
-                nbr_ennemi = 10
-            elif shop == True:
+    def fin_game(self):
+        self.joueur.cooldown +=1
+        if self.joueur.nbr_vies == 0 :
+            fin = True
+        if len(self.ennemis) == 0:
+            if self.tour == 0:
+                self.tour +=1
+                self.tour_fin = True
+                self.nbr_ennemi = 10
+            elif self.shop == True:
                 time.sleep(0.1)
                 erreur = myfont.render('Pas assez d argents ', True, (255,0,0))
                 shop_argent = myfont.render('1. Vie +1, 10$ ', True, (255,255,255))
@@ -165,85 +171,90 @@ def jeu():
                 screen.blit(shop_vitesse_tir,(300,600))
                 key_input = pygame.key.get_pressed()   
                 if key_input[pygame.K_F1]:
-                    if joueur.argents >= 10:
-                        joueur.nbr_vies +=1
-                        joueur.argents -= 10
+                    if self.joueur.argents >= 10:
+                        self.joueur.nbr_vies +=1
+                        self.joueur.argents -= 10
                     else:
                         screen.blit(erreur,(300,800))
 
                 if key_input[pygame.K_F2]:
-                    if joueur.argents >= 15:
-                        joueur.step += 1
-                        joueur.argents -= 15
+                    if self.joueur.argents >= 15:
+                        self.joueur.step += 1
+                        self.joueur.argents -= 15
                     else:
                         screen.blit(erreur,(300,800))
 
                 if key_input[pygame.K_F3]:
-                    if joueur.argents >= 20:
-                        joueur.cooldown -=1
-                        joueur.argents -= 20
+                    if self.joueur.argents >= 20:
+                        self.joueur.cooldown -=1
+                        self.joueur.argents -= 20
                     else:
                         screen.blit(erreur,(300,800))
 
                 if key_input[pygame.K_F4]:
-                    shop = False
-                    tour_fin = True
+                    self.shop = False
+                    self.tour_fin = True
             else:
-                shop = True
-                tour += 1
-                nbr_ennemi += 10
-                    
+                self.shop = True
+                self.tour += 1
+                self.nbr_ennemi += 10
+    
+        if self.tour_fin:
+            self.tour_fin = False
+            for i in range(self.nbr_ennemi):
+                self.ennemis.append(Ennemi(random.randrange(0,width-50),-random.randrange(0,800)))
 
-
-        if tour_fin:
-            tour_fin = False
-            for i in range(nbr_ennemi):
-                ennemis.append(Ennemi(random.randrange(0,width-50),-random.randrange(0,800)))
-
+    def key_deplacement(self):
+        key_input = pygame.key.get_pressed()   
+        if key_input[pygame.K_SPACE]:
+            if self.joueur.cooldown >= cooldown:
+                self.joueur.cooldown = 0
+                self.tirs.append(Tir(self.joueur.x,self.joueur.y))
+        if key_input[pygame.K_RIGHT]:
+            self.joueur.dep(1)
             
-        for ennemi in ennemis:
+        if key_input[pygame.K_LEFT]:
+            self.joueur.dep(-1)
+
+        if key_input[pygame.K_ESCAPE]:
+            pygame.quit()
+            sys.exit()
+
+        for eve in pygame.event.get():
+            if eve.type==pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+
+    def affichage_ennemis(self):
+        for ennemi in self.ennemis:
             ennemi.dep()
-            ennemi.collision(joueur)
+            ennemi.collision(self.joueur,self.ennemis)
             ennemi.affichage()
             if ennemi.vie == 0:
                 r = random.randrange(0, 5)
                 if r == 1:
-                    coins.append(Argent())
-                if ennemi in ennemis:
-                    ennemis.remove(ennemi)
-              
-        if joueur.nbr_vies == 0 :
-            fin = True
+                    self.coins.append(Argent())
+                if ennemi in self.ennemis:
+                    self.ennemis.remove(ennemi)
+        
+    def affichage_tir(self):
+        for tir in self.tirs:
+            tir.collision(self.ennemis, self.tirs)
 
-        for tir in tirs:
-            tir.collision()
-
-        joueur.cooldown +=1
-        key_deplacement(joueur)
-
+def jeu():
+    game = Jeu()
+    while not game.fin:
+        game.key_deplacement()
+        game.affichage_texte()
+        game.affichage_coins()
+        game.affichage_joueur()
+        game.affichage_ennemis()
+        game.affichage_tir()
+        game.fin_game()
         pygame.display.update()
         fpsclock.tick(fps)
 
-def key_deplacement(joueur):
-    key_input = pygame.key.get_pressed()   
-    if key_input[pygame.K_SPACE]:
-        if joueur.cooldown >= cooldown:
-            joueur.cooldown = 0
-            tirs.append(Tir(joueur.x,joueur.y))
-    if key_input[pygame.K_RIGHT]:
-        joueur.dep(1)
-        
-    if key_input[pygame.K_LEFT]:
-        joueur.dep(-1)
 
-    if key_input[pygame.K_ESCAPE]:
-        pygame.quit()
-        sys.exit()
-
-    for eve in pygame.event.get():
-        if eve.type==pygame.QUIT:
-            pygame.quit()
-            sys.exit()
 
 def main():
     while True:
